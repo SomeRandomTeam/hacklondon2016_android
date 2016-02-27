@@ -12,9 +12,9 @@ import com.somrandomteam.hacklondon2016.R;
  * Created by abhinavmishra on 27/02/2016.
  */
 
-public class Map extends Fragment{
+public class Proximity extends Fragment{
 
-    public Map() {
+    public Proximity() {
 
     }
 
@@ -25,6 +25,6 @@ public class Map extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate(R.layout.fragment_proximity, container, false);
     }
 }
