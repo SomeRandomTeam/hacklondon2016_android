@@ -6,18 +6,16 @@
     <ImageView
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:id="@+id/avatar"
+        android:id="@+id/prox_avatar"
         android:src="@drawable/avatar" />
 
     <TextView
+        android:id="@+id/prox_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="Name Goes Here"
         android:textSize="30dp" />
-
-
-
 
 </RelativeLayout>

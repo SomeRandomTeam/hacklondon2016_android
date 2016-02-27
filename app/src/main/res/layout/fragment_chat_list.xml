@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_list"
+    android:name="com.somrandomteam.hacklondon2016.chat.ChatFragment"
+    android:layout_width="match_parent"
+    android:layout_height="465dp"
+    app:layoutManager="LinearLayoutManager"
+    tools:context="com.somrandomteam.hacklondon2016.chat.ChatFragment"
+    tools:listitem="@layout/fragment_chat" />
+
+    <LinearLayout
+        android:id="@+id/input_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:background="#fff"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_weight="0.7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/sendMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:text="Send"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

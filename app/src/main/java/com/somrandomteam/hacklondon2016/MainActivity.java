@@ -1,29 +1,26 @@
 package com.somrandomteam.hacklondon2016;
 
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-
-import com.somrandomteam.hacklondon2016.chat.Chat;
+import com.somrandomteam.hacklondon2016.chat.ChatFragment;
+import com.somrandomteam.hacklondon2016.chat.dummy.DummyContent;
+import com.somrandomteam.hacklondon2016.event.EventFragment;
 import com.somrandomteam.hacklondon2016.map.Map;
-import com.somrandomteam.hacklondon2016.proximity.Proximity;
+import com.somrandomteam.hacklondon2016.proximity.ProximityFragment;
+import com.somrandomteam.hacklondon2016.utils.ViewPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, Map.OnFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener, ProximityFragment.OnListFragmentInteractionListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -37,6 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Bundle extras = getIntent().getExtras();
+        Toast.makeText(this, "" + extras.getBoolean("Login"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, extras.getString("Name"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, extras.getString("EventID"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, extras.getString("Details"), Toast.LENGTH_LONG).show();
+
         // TAB UTILS
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,50 +52,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabLayout.setupWithViewPager(viewPager);
         //
 
-        // CHAT MODULE
-        sendMessage = (Button) findViewById(R.id.sendMessage);
-
-        message = (EditText) findViewById(R.id.message);
-        //
 
         // New Typeface. Use throughout the app.
         Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/mob.ttf");
 
-        //TextView welcomeText = (TextView) findViewById(R.id.welcometext);
-        //welcomeText.setTypeface(customFont);
-/*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
-
-    @Override
-    public void onClick(View v) {
-     // postMessage();
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -102,38 +78,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new EventFragment(), "Event");
         adapter.addFragment(new Map(), "Map");
-        adapter.addFragment(new Proximity(), "Locate");
-        adapter.addFragment(new Chat(), "Chat");
+        adapter.addFragment(new ChatFragment(), "Chat");
+        adapter.addFragment(new ProximityFragment(), "Nearby");
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+    @Override
+    public void onListFragmentInteraction(com.somrandomteam.hacklondon2016.chat.dummy.DummyContent.DummyItem item) {
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
+    }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
+    @Override
+    public void onListFragmentInteraction(com.somrandomteam.hacklondon2016.proximity.dummy.DummyContent.DummyItem item) {
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+    }
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
+    @Override
+    public void onEventUpdate(Uri uri) {
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
+    }
+
+    @Override
+    public void onMapUpdate(Uri uri) {
+
     }
 }
