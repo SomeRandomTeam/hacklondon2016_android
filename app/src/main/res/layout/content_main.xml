@@ -13,7 +13,28 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/welcometext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_centerHorizontal="true"
+        android:textSize="80px"
+        android:text="Welcome Back!"/>
+
+    <Button
+        android:id="@+id/newevent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcometext"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:text="New Event"/>
+
+    <Button
+        android:id="@+id/joinevent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newevent"
+        android:layout_centerHorizontal="true"
+        android:text="Join Event"/>
+
 </RelativeLayout>
