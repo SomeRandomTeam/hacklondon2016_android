@@ -38,7 +38,7 @@ dependencies {
 
     compile 'ch.uepaa.p2p:p2pkit-android:1.1.1'
 
-    //compile 'io.chirp.sdk:chirp-sdk-release:1.0.0@aar'
+    compile 'io.chirp.sdk:chirp-sdk-release:1.0.3@aar'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.squareup.retrofit:retrofit:1.8.0'
