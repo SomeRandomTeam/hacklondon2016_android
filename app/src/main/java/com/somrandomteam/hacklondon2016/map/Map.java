@@ -1,4 +1,4 @@
-package com.somrandomteam.hacklondon2016.tabs;
+package com.somrandomteam.hacklondon2016.map;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

@@ -1,10 +1,7 @@
 package com.somrandomteam.hacklondon2016;
 
-import android.graphics.PixelXorXfermode;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,26 +12,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
-import com.somrandomteam.hacklondon2016.tabs.Chat;
-import com.somrandomteam.hacklondon2016.tabs.Map;
-import com.somrandomteam.hacklondon2016.tabs.Proximity;
+import com.somrandomteam.hacklondon2016.chat.Chat;
+import com.somrandomteam.hacklondon2016.map.Map;
+import com.somrandomteam.hacklondon2016.proximity.Proximity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    private Button sendMessage;
+    private EditText message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TAB UTILS
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -44,13 +47,20 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        //
+
+        // CHAT MODULE
+        sendMessage = (Button) findViewById(R.id.sendMessage);
+
+        message = (EditText) findViewById(R.id.message);
+        //
 
         // New Typeface. Use throughout the app.
         Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/mob.ttf");
 
         //TextView welcomeText = (TextView) findViewById(R.id.welcometext);
         //welcomeText.setTypeface(customFont);
-
+/*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
+
+    @Override
+    public void onClick(View v) {
+     // postMessage();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
