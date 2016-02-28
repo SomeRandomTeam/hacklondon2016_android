@@ -14,9 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.somrandomteam.hacklondon2016.chat.ChatFragment;
 import com.somrandomteam.hacklondon2016.event.EventFragment;
 import com.somrandomteam.hacklondon2016.map.Map;
@@ -25,12 +23,9 @@ import com.somrandomteam.hacklondon2016.utils.GPSTracker;
 import com.somrandomteam.hacklondon2016.utils.Globals;
 import com.somrandomteam.hacklondon2016.utils.ViewPagerAdapter;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
@@ -57,10 +52,10 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
         Bundle extras = getIntent().getExtras();
         Globals.event = extras.getString("EventID");
         Globals.user_id = extras.getString("Name");
-        Toast.makeText(this, "" + extras.getBoolean("Login"), Toast.LENGTH_LONG).show();
-        Toast.makeText(this, Globals.user_id, Toast.LENGTH_LONG).show();
-        Toast.makeText(this, Globals.event, Toast.LENGTH_LONG).show();
-        Toast.makeText(this, extras.getString("Details"), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "" + extras.getBoolean("Login"), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, Globals.user_id, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, Globals.event, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, extras.getString("Details"), Toast.LENGTH_LONG).show();
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
 
 
         // New Typeface. Use throughout the app.
-        Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/mob.ttf");
+        Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/lis.ttf");
 
     }
 
@@ -158,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
                 HttpPost post = new HttpPost(Globals.baseEvent +  Globals.event + "/users/" + Globals.user_id + "/loc");
                 try {
                     post.setEntity(new UrlEncodedFormEntity(data));
-                    client.execute(post);
+                    //client.execute(post);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

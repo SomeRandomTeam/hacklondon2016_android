@@ -3,20 +3,23 @@ package com.somrandomteam.hacklondon2016.proximity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.somrandomteam.hacklondon2016.HackApplication;
 import com.somrandomteam.hacklondon2016.R;
-import com.somrandomteam.hacklondon2016.proximity.dummy.DummyContent;
 import com.somrandomteam.hacklondon2016.proximity.dummy.DummyContent.DummyItem;
+import com.somrandomteam.hacklondon2016.utils.Globals;
+import com.somrandomteam.hacklondon2016.utils.Person;
+import com.somrandomteam.hacklondon2016.utils.PersonAdapter;
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ch.uepaa.p2pkit.P2PKitClient;
 import ch.uepaa.p2pkit.P2PKitStatusCallback;
@@ -67,6 +70,7 @@ public class ProximityFragment extends Fragment {
     }
 
     private String APP_KEY = HackApplication.getSecret("p2p.key");
+    private PersonAdapter personAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,22 +81,22 @@ public class ProximityFragment extends Fragment {
         startP2pDiscovery();
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyProximityRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
+        personAdapter = new PersonAdapter(getActivity(), new ArrayList<Person>());
+        final ListView p2pList = (ListView) view.findViewById(R.id.p2p_list);
+        p2pList.setAdapter(personAdapter);
+
+
         return view;
     }
 
     private void enableKit() {
         //Log.d("P2P Key", APP_KEY);
         final StatusResult result = P2PKitClient.isP2PServicesAvailable(getActivity());
+        try {
+            P2PKitClient.getInstance(getActivity()).getDiscoveryServices().setP2pDiscoveryInfo(Globals.user_id.getBytes());
+        } catch (InfoTooLongException e) {
+            Log.d("P2P Fuck: ", "P2pListener | The discovery info is too long");
+        }
         if (result.getStatusCode() == StatusResult.SUCCESS) {
             P2PKitClient client = P2PKitClient.getInstance(getActivity());
             client.enableP2PKit(mStatusCallback, APP_KEY);
@@ -127,10 +131,14 @@ public class ProximityFragment extends Fragment {
         @Override
         public void onPeerDiscovered(final Peer peer) {
             byte[] colorBytes = peer.getDiscoveryInfo();
-            if (colorBytes != null && colorBytes.length == 3) {
-                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: " + peer.getNodeId());
+            if (colorBytes != null) {
+                Gson gson = new Gson();
+                String infoJSON = "{\"proximity_id\" : \"" + new String(peer.getDiscoveryInfo()) + "\"}";
+                Person person = gson.fromJson(infoJSON, Person.class);
+                personAdapter.add(person);
+                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: " + peer.getDiscoveryInfo().toString());
             } else {
-                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: " + peer.getNodeId() + " without color");
+                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: No name");
             }
         }
 

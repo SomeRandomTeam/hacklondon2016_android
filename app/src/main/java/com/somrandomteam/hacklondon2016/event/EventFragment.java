@@ -1,6 +1,7 @@
 package com.somrandomteam.hacklondon2016.event;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -77,9 +78,19 @@ public class EventFragment extends Fragment {
             organiser = "";
         }
 
-        ((TextView) result.findViewById(R.id.eventName)).setText("Name: " + extras.getString("Name"));
-        ((TextView) result.findViewById(R.id.eventId)).setText("Event ID: " + extras.getString("EventID"));
-        ((TextView) result.findViewById(R.id.eventOrg)).setText("Organiser: " + organiser);
+        Typeface customFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/lis.ttf");
+
+        TextView eventName = (TextView) result.findViewById(R.id.eventName);
+        TextView eventId = (TextView) result.findViewById(R.id.eventId);
+        TextView eventOrg = (TextView) result.findViewById(R.id.eventOrg);
+
+        eventName.setTypeface(customFont);
+        eventId.setTypeface(customFont);
+        eventOrg.setTypeface(customFont);
+
+        eventName.setText("Name: " + extras.getString("Name"));
+        eventId.setText("Event ID: " + extras.getString("EventID"));
+        eventOrg.setText("Organiser: " + organiser);
 
         return result;
     }

@@ -23,6 +23,7 @@
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:text="@string/event_name"
+            android:textSize="20dp"
             android:layout_below="@id/eventAvatar"/>
 
         <TextView
@@ -32,6 +33,7 @@
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:text="@string/event_id"
+            android:textSize="20dp"
             android:layout_below="@id/eventName"/>
 
         <TextView
@@ -41,6 +43,7 @@
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:text="@string/event_org"
+            android:textSize="20dp"
             android:layout_below="@id/eventId"/>
 
     </RelativeLayout>
