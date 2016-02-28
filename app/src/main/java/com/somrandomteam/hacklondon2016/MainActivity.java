@@ -34,6 +34,8 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 public class MainActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, Map.OnFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener, ProximityFragment.OnListFragmentInteractionListener {
 
+    private GPSTracker gps;
+
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -56,11 +58,7 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 FINE_CODE);
 
-        GPSTracker gps = new GPSTracker(this);
-        if (gps.canGetLocation()) {
-            GPSUpdater updater = new GPSUpdater(gps);
-            updater.execute();
-        }
+        gps = new GPSTracker(this);
 
         // TAB UTILS
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,36 +120,5 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
     @Override
     public void onMapUpdate(Uri uri) {
 
-    }
-
-    public class GPSUpdater extends AsyncTask<String, String, Boolean> {
-
-        GPSTracker gps;
-
-        public GPSUpdater(GPSTracker gps) {
-            this.gps = gps;
-        }
-        @Override
-        protected Boolean doInBackground(String... params) {
-            while(gps.canGetLocation()) {
-                Double lat = gps.getLatitude();
-                Double lon = gps.getLongitude();
-
-                List<NameValuePair> data = new ArrayList<>();
-                data.add(new BasicNameValuePair("latitude", lat.toString()));
-                data.add(new BasicNameValuePair("longitude", lon.toString()));
-
-                HttpClient client = new DefaultHttpClient();
-                HttpPost post = new HttpPost(Globals.baseEvent +  Globals.event + "/users/" + Globals.user_id + "/loc");
-                try {
-                    post.setEntity(new UrlEncodedFormEntity(data));
-                    //client.execute(post);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-            return false;
-        }
     }
 }
