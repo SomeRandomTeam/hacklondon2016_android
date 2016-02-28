@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.somrandomteam.hacklondon2016.R;
 
+import org.json.JSONObject;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -68,9 +70,16 @@ public class EventFragment extends Fragment {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_event, container, false);
         Bundle extras = getActivity().getIntent().getExtras();
+        String organiser;
+        try {
+            organiser = (new JSONObject(extras.getString("Details"))).getString("organiser");
+        } catch (Exception e) {
+            organiser = "";
+        }
+
         ((TextView) result.findViewById(R.id.eventName)).setText("Name: " + extras.getString("Name"));
         ((TextView) result.findViewById(R.id.eventId)).setText("Event ID: " + extras.getString("EventID"));
-        ((TextView) result.findViewById(R.id.eventOrg)).setText("Organiser: " + extras.getString("Name"));
+        ((TextView) result.findViewById(R.id.eventOrg)).setText("Organiser: " + organiser);
 
         return result;
     }

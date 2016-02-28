@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,12 +111,32 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         final ListView messagesView = (ListView) view.findViewById(R.id.chat_list);
         messagesView.setAdapter(messageAdapter);
 
+        JSONArray messages = null;
+        try {
+            messages = (new JSONObject(getActivity().getIntent().getExtras().getString("Details"))).getJSONArray("messages");
+        } catch (Exception e) {
+            Log.d("JSONArray: ", "Fucked");
+        }
+
+        if (messages != null) {
+            Gson gson = new Gson();
+            for (int i = 0; i < messages.length(); i++) {
+                String data;
+                try {
+                    data = messages.getString(i);
+                } catch (Exception e) {
+                    data = null;
+                }
+                if (data != null) {
+                    Message message = gson.fromJson(data, Message.class);
+                    messageAdapter.add(message);
+                    messagesView.setSelection(messageAdapter.getCount() - 1);
+                }
+            }
+        }
+
         Pusher pusher = new Pusher(HackApplication.getSecret("pusher.key"));
         Channel channel = pusher.subscribe(getActivity().getIntent().getExtras().getString("EventID"));
-
-        String EVENTID = dataUrl + getActivity().getIntent().getExtras().getString("EventID");
-        RetrieveMessagesTask mMessageTask = new RetrieveMessagesTask(EVENTID, messageAdapter);
-        mMessageTask.execute((Void) null);
 
         channel.bind("message", new SubscriptionEventListener() {
 
@@ -235,66 +256,4 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public class RetrieveMessagesTask extends AsyncTask<Void, Void, Boolean> {
-
-        String EVENTID;
-        MessageAdapter messageAdapter;
-        private List<Message> messages = new ArrayList<>();
-
-        RetrieveMessagesTask(String EVENTID, MessageAdapter messageAdapter) {
-            this.EVENTID = EVENTID;
-            this.messageAdapter = messageAdapter;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Gson gson = new Gson();
-            HttpClient client = new DefaultHttpClient();
-            HttpGet get = new HttpGet(EVENTID);
-            HttpResponse res;
-            String result;
-            JSONObject mes;
-            try {
-                res = client.execute(get);
-                result = convertInputStreamToString(res.getEntity().getContent());
-                mes = new JSONObject(result);
-                JSONArray mess = mes.getJSONArray("messages");
-                for (int i = 0; i < mess.length(); i++) {
-                    String thisMessage = mess.getJSONObject(i).toString();
-                    Message message = gson.fromJson(thisMessage, Message.class);
-                    messages.add(message);
-                }
-                onPostExecute(true);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-
-        }
-
-
-        protected void onPostExecute(final boolean success) {
-            if (success) {
-                for (Message m : messages) {
-                    messageAdapter.add(m);
-                }
-            }
-
-        }
-
-        private String convertInputStreamToString(InputStream inputStream) throws IOException {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while ((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-            return result;
-
-        }
-
-    }
 }

@@ -6,17 +6,22 @@
 
     <TextView
         android:id="@+id/message_sender"
-        android:layout_marginLeft="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Sender"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:id="@+id/message_body"
+        android:textSize="20dp"
         android:layout_below="@+id/message_sender"
         android:layout_alignLeft="@+id/message_sender"
+        android:text="Message"
         />
 
 
