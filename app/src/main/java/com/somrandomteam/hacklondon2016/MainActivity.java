@@ -1,7 +1,6 @@
 package com.somrandomteam.hacklondon2016;
 
 import android.Manifest;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
