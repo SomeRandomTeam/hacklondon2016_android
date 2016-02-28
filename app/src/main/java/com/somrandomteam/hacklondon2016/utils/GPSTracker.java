@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.somrandomteam.hacklondon2016.HackApplication;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 public class GPSTracker extends Service implements LocationListener {
 
     private final Context mContext;
+
+    private static String baseUrl = HackApplication.getSecret("base.url");
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -120,7 +124,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(this.mContext, "Location changed", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.mContext, "Location changed", Toast.LENGTH_LONG).show();
         new LocationSender().execute(location);
     }
 
@@ -160,7 +164,7 @@ public class GPSTracker extends Service implements LocationListener {
                 data.add(new BasicNameValuePair("longitude", lon.toString()));
 
                 HttpClient client = new DefaultHttpClient();
-                HttpPost post = new HttpPost(Globals.baseEvent +  Globals.event + "/users/" + Globals.user_id + "/loc");
+                HttpPost post = new HttpPost(baseUrl +  Globals.event + "/users/" + Globals.user_id + "/loc");
                 try {
                     post.setEntity(new UrlEncodedFormEntity(data));
                     client.execute(post);

@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
     <string name="action_exit">Exit</string>
+    <string name="action_reset">Reset</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">This should not be here</string>

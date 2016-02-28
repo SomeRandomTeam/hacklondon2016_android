@@ -13,4 +13,10 @@
         android:orderInCategory="100"
         android:title="@string/action_exit"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/reset"
+        android:orderInCategory="100"
+        android:title="@string/action_reset"
+        app:showAsAction="never" />
 </menu>

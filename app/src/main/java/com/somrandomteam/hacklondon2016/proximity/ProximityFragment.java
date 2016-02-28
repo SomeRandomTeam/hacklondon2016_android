@@ -17,9 +17,7 @@ import com.somrandomteam.hacklondon2016.utils.Globals;
 import com.somrandomteam.hacklondon2016.utils.Person;
 import com.somrandomteam.hacklondon2016.utils.PersonAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import ch.uepaa.p2pkit.P2PKitClient;
 import ch.uepaa.p2pkit.P2PKitStatusCallback;
@@ -95,7 +93,7 @@ public class ProximityFragment extends Fragment {
         try {
             P2PKitClient.getInstance(getActivity()).getDiscoveryServices().setP2pDiscoveryInfo(Globals.user_id.getBytes());
         } catch (InfoTooLongException e) {
-            Log.d("P2P Fuck: ", "P2pListener | The discovery info is too long");
+            Log.d("P2P: ", "P2pListener | The discovery info is too long");
         }
         if (result.getStatusCode() == StatusResult.SUCCESS) {
             P2PKitClient client = P2PKitClient.getInstance(getActivity());
@@ -116,7 +114,7 @@ public class ProximityFragment extends Fragment {
         try {
             P2PKitClient.getInstance(getActivity()).getDiscoveryServices().setP2pDiscoveryInfo(getActivity().getIntent().getExtras().getString("Name").getBytes());
         } catch (InfoTooLongException e) {
-            Log.d("P2P Fuck up:", "P2pListener | The discovery info is too long");
+            Log.d("P2P:", "P2pListener | The discovery info is too long");
         }
         P2PKitClient.getInstance(getActivity()).getDiscoveryServices().addP2pListener(mP2pDiscoveryListener);
     }
@@ -125,7 +123,7 @@ public class ProximityFragment extends Fragment {
 
         @Override
         public void onP2PStateChanged(final int state) {
-            Log.d("P2P Fuck up: ", "P2pListener | State changed: " + state);
+            Log.d("P2P: ", "P2pListener | State changed: " + state);
         }
 
         @Override
@@ -136,50 +134,50 @@ public class ProximityFragment extends Fragment {
                 String infoJSON = "{\"proximity_id\" : \"" + new String(peer.getDiscoveryInfo()) + "\"}";
                 Person person = gson.fromJson(infoJSON, Person.class);
                 personAdapter.add(person);
-                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: " + peer.getDiscoveryInfo().toString());
+                Log.d("P2P: ", "P2pListener | Peer discovered: " + peer.getDiscoveryInfo().toString());
             } else {
-                Log.d("P2P Fuck up: ", "P2pListener | Peer discovered: No name");
+                Log.d("P2P: ", "P2pListener | Peer discovered: No name");
             }
         }
 
         @Override
         public void onPeerLost(final Peer peer) {
-            Log.d("P2P Fuck up: ", "P2pListener | Peer lost: " + peer.getNodeId());
+            Log.d("P2P: ", "P2pListener | Peer lost: " + peer.getNodeId());
         }
 
         @Override
         public void onPeerUpdatedDiscoveryInfo(Peer peer) {
             byte[] colorBytes = peer.getDiscoveryInfo();
             if (colorBytes != null && colorBytes.length == 3) {
-                Log.d("P2P Fuck up: ", "P2pListener | Peer updated: " + peer.getNodeId());
+                Log.d("P2P: ", "P2pListener | Peer updated: " + peer.getNodeId());
             }
         }
     };
 
     private void stopP2pDiscovery() {
         P2PKitClient.getInstance(getActivity()).getDiscoveryServices().removeP2pListener(mP2pDiscoveryListener);
-        Log.d("P2P Fuck up: ", "P2pListener removed");
+        Log.d("P2P: ", "P2pListener removed");
     }
 
     private final P2PKitStatusCallback mStatusCallback = new P2PKitStatusCallback() {
         @Override
         public void onEnabled() {
-            Log.d("P2P Status: ", "Successfully enabled P2P Services");
+            Log.d("P2P: ", "Successfully enabled P2P Services");
 
         }
 
         @Override
         public void onSuspended() {
-            Log.d("P2P Status: ", "P2P Services suspended");
+            Log.d("P2P: ", "P2P Services suspended");
         }
 
         @Override
         public void onError(StatusResult statusResult) {
-            Log.d("P2P Status: ", "Error in P2P Services with status: " + statusResult.getStatusCode());
+            Log.d("P2P: ", "Error in P2P Services with status: " + statusResult.getStatusCode());
         }
     };
 
-    String TAG = "P2P Fuck up: ";
+    String TAG = "P2P";
     private final P2PListener mP2PDiscoveryListener = new P2PListener() {
         @Override
         public void onP2PStateChanged(final int state) {

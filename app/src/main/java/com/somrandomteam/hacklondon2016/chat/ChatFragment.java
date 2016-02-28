@@ -1,12 +1,8 @@
 package com.somrandomteam.hacklondon2016.chat;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +21,6 @@ import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.somrandomteam.hacklondon2016.HackApplication;
 import com.somrandomteam.hacklondon2016.R;
-import com.somrandomteam.hacklondon2016.chat.dummy.DummyContent;
 import com.somrandomteam.hacklondon2016.chat.dummy.DummyContent.DummyItem;
 import com.somrandomteam.hacklondon2016.utils.Message;
 import com.somrandomteam.hacklondon2016.utils.MessageAdapter;
@@ -33,18 +28,9 @@ import com.somrandomteam.hacklondon2016.utils.MessageAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 /**
  * A fragment representing a list of Items.
@@ -89,7 +75,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     private Button sendMessage;
     private EditText messageRaw;
     private String username;
-    private String dataUrl = "http://szekelyszilv.com:3333/api/v1/events/";
+    private String dataUrl = HackApplication.getSecret("base.url") + "/api/v1/events/";
     private String MESSAGE_ENDPOINT;
     private MessageAdapter messageAdapter;
 
@@ -115,7 +101,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         try {
             messages = (new JSONObject(getActivity().getIntent().getExtras().getString("Details"))).getJSONArray("messages");
         } catch (Exception e) {
-            Log.d("JSONArray: ", "Fucked");
+            Log.d("JSONArray: ", "Empty");
         }
 
         if (messages != null) {

@@ -1,7 +1,6 @@
 package com.somrandomteam.hacklondon2016;
 
 import android.Manifest;
-import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.loopj.android.http.HttpGet;
 import com.somrandomteam.hacklondon2016.chat.ChatFragment;
 import com.somrandomteam.hacklondon2016.event.EventFragment;
 import com.somrandomteam.hacklondon2016.map.Map;
@@ -23,7 +24,7 @@ import com.somrandomteam.hacklondon2016.utils.GPSTracker;
 import com.somrandomteam.hacklondon2016.utils.Globals;
 import com.somrandomteam.hacklondon2016.utils.ViewPagerAdapter;
 
-import org.apache.log4j.chainsaw.Main;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 public class MainActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, Map.OnFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener, ProximityFragment.OnListFragmentInteractionListener {
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private String baseUrl;
 
     private Button sendMessage;
     private EditText message;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        baseUrl = HackApplication.getSecret("base.url");
         Bundle extras = getIntent().getExtras();
         Globals.event = extras.getString("EventID");
         Globals.user_id = extras.getString("Name");
@@ -88,6 +90,16 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
 
         if (id == R.id.exit) {
             finish();
+            return true;
+        }
+
+        if (id == R.id.reset) {
+            try {
+                new DefaultHttpClient().execute(new HttpGet(baseUrl + "clear"));
+                Toast.makeText(this, "Database Cleared", Toast.LENGTH_SHORT).show();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
             return true;
         }
 

@@ -84,11 +84,14 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private View mProgressView;
     private View mLoginFormView;
     private boolean createEvent;
+    private String baseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        baseUrl = HackApplication.getSecret("base.url");
+
         // Set up the login form.
         mNameView = (AutoCompleteTextView) findViewById(R.id.name);
         populateAutoComplete();
@@ -335,7 +338,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         private HttpClient client = new DefaultHttpClient();
         private HttpResponse res;
         private InputStream inputStream = null;
-        private String dataUrl = "http://szekelyszilv.com:3333/api/v1/events/";
+        private String dataUrl = baseUrl + "/api/v1/events/";
         private String result;
 
         UserLoginTask(String name, String eventid) {
