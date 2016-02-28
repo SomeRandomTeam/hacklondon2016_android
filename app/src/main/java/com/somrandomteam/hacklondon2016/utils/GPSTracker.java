@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -40,10 +41,10 @@ public class GPSTracker extends Service implements LocationListener {
     boolean isNetworkEnabled = false;
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000; // 1 minute
 
     protected LocationManager locationManager;
 
@@ -70,8 +71,7 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 // First get location from Network Provider
                 ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION);
-                String mode = isGPSEnabled ?
-                        LocationManager.GPS_PROVIDER : LocationManager.NETWORK_PROVIDER;
+                String mode = LocationManager.GPS_PROVIDER;
                 locationManager.requestLocationUpdates(
                         mode,
                         MIN_TIME_BW_UPDATES,
@@ -121,22 +121,7 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Toast.makeText(this.mContext, "Location changed", Toast.LENGTH_LONG).show();
-
-        Double lat = location.getLatitude();
-        Double lon = location.getLongitude();
-
-        List<NameValuePair> data = new ArrayList<>();
-        data.add(new BasicNameValuePair("latitude", lat.toString()));
-        data.add(new BasicNameValuePair("longitude", lon.toString()));
-
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(Globals.baseEvent +  Globals.event + "/users/" + Globals.user_id + "/loc");
-        try {
-            post.setEntity(new UrlEncodedFormEntity(data));
-            client.execute(post);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new LocationSender().execute(location);
     }
 
     @Override
@@ -158,5 +143,32 @@ public class GPSTracker extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private static class LocationSender extends AsyncTask<Location, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Location... params) {
+            for(int i = 0; i < params.length; i++) {
+                Location location = params[i];
+
+                Double lat = location.getLatitude();
+                Double lon = location.getLongitude();
+
+                List<NameValuePair> data = new ArrayList<>();
+                data.add(new BasicNameValuePair("latitude", lat.toString()));
+                data.add(new BasicNameValuePair("longitude", lon.toString()));
+
+                HttpClient client = new DefaultHttpClient();
+                HttpPost post = new HttpPost(Globals.baseEvent +  Globals.event + "/users/" + Globals.user_id + "/loc");
+                try {
+                    post.setEntity(new UrlEncodedFormEntity(data));
+                    client.execute(post);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
     }
 }
