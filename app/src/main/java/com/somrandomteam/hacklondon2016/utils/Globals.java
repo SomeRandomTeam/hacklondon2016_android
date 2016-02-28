@@ -10,5 +10,7 @@ public class Globals {
     public static boolean permission;
     public static String user_id;
     public static String mapUrl = HackApplication.getSecret("base.url") + "map/";
+    public String[] images = {
 
+    };
 }

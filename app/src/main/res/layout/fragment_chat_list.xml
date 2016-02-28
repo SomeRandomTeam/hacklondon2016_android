@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,9 +14,10 @@
     android:name="com.somrandomteam.hacklondon2016.chat.ChatFragment"
     android:layout_width="match_parent"
     android:layout_height="465dp"
-
     tools:context="com.somrandomteam.hacklondon2016.chat.ChatFragment"
     tools:listitem="@layout/fragment_chat" />
+
+
 
     <LinearLayout
         android:id="@+id/input_bar"
