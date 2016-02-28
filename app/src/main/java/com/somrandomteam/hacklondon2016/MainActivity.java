@@ -1,8 +1,9 @@
 package com.somrandomteam.hacklondon2016;
 
 import android.Manifest;
+import android.app.IntentService;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -22,15 +23,7 @@ import com.somrandomteam.hacklondon2016.utils.GPSTracker;
 import com.somrandomteam.hacklondon2016.utils.Globals;
 import com.somrandomteam.hacklondon2016.utils.ViewPagerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import org.apache.log4j.chainsaw.Main;
 
 public class MainActivity extends AppCompatActivity implements EventFragment.OnFragmentInteractionListener, Map.OnFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener, ProximityFragment.OnListFragmentInteractionListener {
 
@@ -86,7 +79,15 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            finish();
+            Intent loginAgain = new Intent(MainActivity.this, Login.class);
+            startActivity(loginAgain);
+            return true;
+        }
+
+        if (id == R.id.exit) {
+            finish();
             return true;
         }
 
