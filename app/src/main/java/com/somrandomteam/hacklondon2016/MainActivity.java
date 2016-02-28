@@ -52,10 +52,6 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
         Bundle extras = getIntent().getExtras();
         Globals.event = extras.getString("EventID");
         Globals.user_id = extras.getString("Name");
-        //Toast.makeText(this, "" + extras.getBoolean("Login"), Toast.LENGTH_LONG).show();
-        //Toast.makeText(this, Globals.user_id, Toast.LENGTH_LONG).show();
-        //Toast.makeText(this, Globals.event, Toast.LENGTH_LONG).show();
-        //Toast.makeText(this, extras.getString("Details"), Toast.LENGTH_LONG).show();
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -79,9 +75,6 @@ public class MainActivity extends AppCompatActivity implements EventFragment.OnF
         tabLayout.setupWithViewPager(viewPager);
         //
 
-
-        // New Typeface. Use throughout the app.
-        Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/lis.ttf");
 
     }
 

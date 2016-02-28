@@ -12,7 +12,7 @@
             android:id="@+id/eventAvatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/avatar"
+            android:src="@drawable/bigLogo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"/>
 
@@ -21,9 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
             android:text="@string/event_name"
-            android:textSize="20dp"
+            android:textSize="30dp"
+            android:layout_marginLeft="20dp"
             android:layout_below="@id/eventAvatar"/>
 
         <TextView
@@ -31,9 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
             android:text="@string/event_id"
-            android:textSize="20dp"
+            android:textSize="30dp"
+            android:layout_marginLeft="20dp"
             android:layout_below="@id/eventName"/>
 
         <TextView
@@ -41,9 +41,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
             android:text="@string/event_org"
-            android:textSize="20dp"
+            android:textSize="30dp"
             android:layout_below="@id/eventId"/>
 
     </RelativeLayout>
