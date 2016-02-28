@@ -1,8 +1,8 @@
 package com.somrandomteam.hacklondon2016.chat;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,21 +12,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.pusher.client.Pusher;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.somrandomteam.hacklondon2016.HackApplication;
 import com.somrandomteam.hacklondon2016.R;
 import com.somrandomteam.hacklondon2016.chat.dummy.DummyContent;
 import com.somrandomteam.hacklondon2016.chat.dummy.DummyContent.DummyItem;
+import com.somrandomteam.hacklondon2016.utils.Message;
+import com.somrandomteam.hacklondon2016.utils.MessageAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Date;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 /**
  * A fragment representing a list of Items.
@@ -34,7 +51,7 @@ import cz.msebera.android.httpclient.Header;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ChatFragment extends Fragment implements View.OnClickListener{
+public class ChatFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -73,6 +90,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
     private String username;
     private String dataUrl = "http://szekelyszilv.com:3333/api/v1/events/";
     private String MESSAGE_ENDPOINT;
+    private MessageAdapter messageAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +105,42 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
         sendMessage.setOnClickListener(this);
 
         messageRaw = (EditText) view.findViewById(R.id.message);
+
+        messageAdapter = new MessageAdapter(getActivity(), new ArrayList<Message>());
+        final ListView messagesView = (ListView) view.findViewById(R.id.chat_list);
+        messagesView.setAdapter(messageAdapter);
+
+        Pusher pusher = new Pusher(HackApplication.getSecret("pusher.key"));
+        Channel channel = pusher.subscribe(getActivity().getIntent().getExtras().getString("EventID"));
+
+        String EVENTID = dataUrl + getActivity().getIntent().getExtras().getString("EventID");
+        RetrieveMessagesTask mMessageTask = new RetrieveMessagesTask(EVENTID, messageAdapter);
+        mMessageTask.execute((Void) null);
+
+        channel.bind("message", new SubscriptionEventListener() {
+
+
+            @Override
+            public void onEvent(String channelName, String eventName, final String data) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Gson gson = new Gson();
+                        Message message = gson.fromJson(data, Message.class);
+                        messageAdapter.add(message);
+
+                        // have the ListView scroll down to the new message
+                        messagesView.setSelection(messageAdapter.getCount() - 1);
+                    }
+
+                });
+            }
+
+        });
+
+        // connect to the Pusher API
+        pusher.connect();
+
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -142,7 +196,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
 
         // create our HTTP client
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(MESSAGE_ENDPOINT, params, new JsonHttpResponseHandler(){
+        client.post(MESSAGE_ENDPOINT, params, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -178,5 +232,69 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+
+
+    public class RetrieveMessagesTask extends AsyncTask<Void, Void, Boolean> {
+
+        String EVENTID;
+        MessageAdapter messageAdapter;
+        private List<Message> messages = new ArrayList<>();
+
+        RetrieveMessagesTask(String EVENTID, MessageAdapter messageAdapter) {
+            this.EVENTID = EVENTID;
+            this.messageAdapter = messageAdapter;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Gson gson = new Gson();
+            HttpClient client = new DefaultHttpClient();
+            HttpGet get = new HttpGet(EVENTID);
+            HttpResponse res;
+            String result;
+            JSONObject mes;
+            try {
+                res = client.execute(get);
+                result = convertInputStreamToString(res.getEntity().getContent());
+                mes = new JSONObject(result);
+                JSONArray mess = mes.getJSONArray("messages");
+                for (int i = 0; i < mess.length(); i++) {
+                    String thisMessage = mess.getJSONObject(i).toString();
+                    Message message = gson.fromJson(thisMessage, Message.class);
+                    messages.add(message);
+                }
+                onPostExecute(true);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+
+        }
+
+
+        protected void onPostExecute(final boolean success) {
+            if (success) {
+                for (Message m : messages) {
+                    messageAdapter.add(m);
+                }
+            }
+
+        }
+
+        private String convertInputStreamToString(InputStream inputStream) throws IOException {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while ((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+            return result;
+
+        }
+
     }
 }

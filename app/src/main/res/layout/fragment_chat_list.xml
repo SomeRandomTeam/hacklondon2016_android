@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chat_list"
     android:name="com.somrandomteam.hacklondon2016.chat.ChatFragment"
     android:layout_width="match_parent"
     android:layout_height="465dp"
-    app:layoutManager="LinearLayoutManager"
+
     tools:context="com.somrandomteam.hacklondon2016.chat.ChatFragment"
     tools:listitem="@layout/fragment_chat" />
 
