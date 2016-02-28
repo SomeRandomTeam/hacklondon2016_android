@@ -91,7 +91,7 @@ public class ProximityFragment extends Fragment {
     }
 
     private void enableKit() {
-        Log.d("P2P Key", APP_KEY);
+        //Log.d("P2P Key", APP_KEY);
         final StatusResult result = P2PKitClient.isP2PServicesAvailable(getActivity());
         if (result.getStatusCode() == StatusResult.SUCCESS) {
             P2PKitClient client = P2PKitClient.getInstance(getActivity());

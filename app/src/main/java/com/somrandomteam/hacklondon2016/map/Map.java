@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import com.somrandomteam.hacklondon2016.R;
+import com.somrandomteam.hacklondon2016.utils.Globals;
+import com.somrandomteam.hacklondon2016.utils.MapClient;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +30,8 @@ public class Map extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private WebView mapLoader;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +70,13 @@ public class Map extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        mapLoader = (WebView) view.findViewById(R.id.mapLoader);
+        mapLoader.getSettings().setJavaScriptEnabled(true);
+        mapLoader.setWebViewClient(new MapClient());
+        mapLoader.loadUrl(Globals.mapUrl + Globals.event);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
